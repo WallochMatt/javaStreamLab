@@ -1,11 +1,7 @@
 package com.dcc.jpa_stream_lab.service;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -103,17 +99,29 @@ public class StreamLabService {
     {
         // Write a query that retrieves all of the products in the shopping cart of the user who has the email "afton@gmail.com".
         // Return the list
+        User afton = users.findAll().stream().filter(r -> r.getEmail().equals("afton@gmail.com")).findFirst().orElse(null);
+        List<ShoppingcartItem> productInCart = shoppingcartitems.findAll().stream().filter(uid -> uid.getUser().equals(afton)).toList();
+        List<Product> theirItems = productInCart.stream().map((product) -> product.getProduct()).toList();
 
-    	return null;
+//        for(ShoppingcartItem item: productInCart){
+//            System.out.println(item.getProduct().getName());
+//        }
+
+        return theirItems;
     }
 
     public long RProblemSeven()
     {
         // Write a query that retrieves all of the products in the shopping cart of the user who has the email "oda@gmail.com" and returns the sum of all of the products prices.
     	// Remember to break the problem down and take it one step at a time!
+        User oda = users.findAll().stream().filter(r -> r.getEmail().equals("oda@gmail.com")).findFirst().orElse(null);
+        List<ShoppingcartItem> inOdaCart = shoppingcartitems.findAll().stream().filter(product -> product.getUser().equals(oda)).toList();
 
-
-    	return 0;
+        long total = 0;
+        for(ShoppingcartItem p: inOdaCart){
+            total += p.getProduct().getPrice();
+        }
+    	return total;
 
     }
 
@@ -121,8 +129,12 @@ public class StreamLabService {
     {
         // Write a query that retrieves all of the products in the shopping cart of users who have the role of "Employee".
     	// Return the list
+        Role getEmployee = roles.findAll().stream().filter(r -> r.getName().equals("Employee")).findFirst().orElse(null);
+        List<User> allEmployees = users.findAll().stream().filter(u -> u.getRoles().contains(getEmployee)).toList();
+        List<List<ShoppingcartItem>> allCarts = allEmployees.stream().map(u -> u.getShoppingcartItems()).toList();
+        List<Product> allProducts = allCarts.stream().flatMap((c) -> c.stream().map(p -> p.getProduct())).toList();
 
-    	return null;
+    	return allProducts;
     }
 
     // <><><><><><><><> CUD (Create, Update, Delete) Actions <><><><><><><><><>
