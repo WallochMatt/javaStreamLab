@@ -155,9 +155,13 @@ public class StreamLabService {
     {
         // Create a new Product object and add that product to the Products table.
         // Return the product
-    	
+        Product myProduct = new Product();
+        myProduct.setName("Wrist Splints");
+        myProduct.setDescription("Keep your wrists stable with these splints. Perfect for those programmer induced carpal tunnel issues");
+        myProduct.setPrice(52);
+    	products.save(myProduct);
 
-    	return null;
+    	return myProduct;
 
     }
 
@@ -175,8 +179,15 @@ public class StreamLabService {
     	// Create a new ShoppingCartItem to represent the new product you created being added to the new User you created's shopping cart.
         // Add the product you created to the user we created in the ShoppingCart junction table.
         // Return the ShoppingcartItem
+        User david = users.findAll().stream().filter(u -> u.getEmail().equals("david@gmail.com")).findFirst().orElse(null);
+        Product wristSplints = products.findAll().stream().filter(p -> p.getName().equals("Wrist Splints")).findFirst().orElse(null);
+        ShoppingcartItem newEntry = new ShoppingcartItem();
+        newEntry.setUser(david);
+        newEntry.setProduct(wristSplints);
+        newEntry.setQuantity(2);
+        shoppingcartitems.save(newEntry);
 
-    	return null;
+    	return newEntry;
     	
     }
 
