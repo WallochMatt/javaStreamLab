@@ -231,11 +231,34 @@ public class StreamLabService {
     
     // DProblemOne
     // Delete the role relationship from the user who has the email "oda@gmail.com".
+    public String DProblemOne()
+    {
+        User oda = users.findAll().stream().filter(r -> r.getEmail().equals("oda@gmail.com")).findFirst().orElse(null);
+        Role odaRole = roles.findAll().stream().filter(r -> r.getUsers().contains(oda)).findFirst().orElse(null);
+        oda.removeRole(odaRole);
+        return "Entry deleted";
 
+    }
     // DProblemTwo
     // Delete all the product relationships to the user with the email "oda@gmail.com" in the ShoppingCart table.
+    public String DProblemTwo()
+    {
+        User oda = users.findAll().stream().filter(r -> r.getEmail().equals("oda@gmail.com")).findFirst().orElse(null);
+        List<ShoppingcartItem> odaCart = shoppingcartitems.findAll().stream().filter(sc -> sc.getUser().equals(oda)).toList();
+        for(ShoppingcartItem item: odaCart){
+            shoppingcartitems.delete(item);
+        }
+        return "Items removed";
+
+    }
 
     // DProblemThree
     // Delete the user with the email "oda@gmail.com" from the Users table.
+    public String DProblemThree()
+    {
+        User oda = users.findAll().stream().filter(r -> r.getEmail().equals("oda@gmail.com")).findFirst().orElse(null);
+        users.delete(oda);
 
+        return "User deleted";
+    }
 }
